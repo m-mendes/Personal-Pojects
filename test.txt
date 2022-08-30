@@ -1,0 +1,45 @@
+Sub analyse()
+    Dim task As String
+    Dim curreDeviceTask As String
+    line_start = 1
+    line_end = 19
+    line_task = 0
+    
+    task = Worksheets("BackEnd").Range("F1").Text
+    
+    taskSheet = "Task " + task
+    Worksheets.Add.Name = taskSheet
+    
+    Worksheets(taskSheet).Range("A1").Value = "Devices that have the task"
+    Worksheets(taskSheet).Range("B1").Value = "Task that they have and may close"
+    
+    count_start = 0
+    count_pos = 2
+    count_pos_task = 2
+    Do While line_start <= line_end
+        pos = "B" + CStr(line_start)
+        
+        
+        curreDeviceTask = Worksheets("BackEnd").Range(pos).Text
+        
+        If curreDeviceTask = task Then
+            Worksheets(taskSheet).Range("A" + CStr(count_pos)).Value = Worksheets("BackEnd").Range("A" + CStr(line_start)).Text
+            count_pos_device = count_pos
+            line_task = line_start + 1
+            Do While line_task < line_end
+                If Worksheets("BackEnd").Range("A" + CStr(line_task)).Value = Worksheets(taskSheet).Range("A" + CStr(count_pos)).Value Then
+                    Worksheets(taskSheet).Range("B" + CStr(count_pos_device)).Value = Worksheets("BackEnd").Range("B" + CStr(line_task)).Text
+                    count_pos_device = count_pos_device + 1
+                End If
+                line_task = line_task + 1
+                
+            Loop
+            count_pos = count_pos_device + 1
+        End If
+            
+        line_start = line_start + 1
+        
+    Loop
+
+
+End Sub
