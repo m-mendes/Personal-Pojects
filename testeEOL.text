@@ -1,27 +1,44 @@
-Sub analyse()
-    Dim asstesWithTask(4) As Variant
-    Dim test As Variant
+Sub eolTest()
+    Dim asstesWithTask() As String
 
     line_start = 2
     line_end = Range("A1").End(xlDown).Row
+    numberOfAsstes = 1
     
+    arrayItems = 1
     arrayPos = 0
+    ReDim asstesWithTask(arrayItems) As String
     
     Do While line_start <= line_end
         
         curreDevice = Range("B" + CStr(line_start))
 
         If InStr(CStr(Range("D" + CStr(line_start))), "EOL") Then
-            asstesWithTask(arrayPos) = Range("B" + CStr(line_start)).Value
-            arrayPos = arrayPos + 1
+            startArrayItems = 0
+            isInArray = 0
+
+            Do While startArrayItems <= arrayPos
+                If CStr(Range("B" + CStr(line_start)).Value) = CStr(asstesWithTask(startArrayItems)) Then
+                    isInArray = 1
+                End If
+                startArrayItems = startArrayItems + 1
+            Loop
+            If isInArray = 0 Then
+                arrayItems = arrayItems + 1
+                ReDim Preserve asstesWithTask(arrayItems) As String
+                asstesWithTask(arrayPos) = Range("B" + CStr(line_start)).Value
+                arrayPos = arrayPos + 1
+                
+            End If
         End If
+        isInArray = 0
         line_start = line_start + 1
     Loop
 
     arrayItems = arrayPos + 1
     startArrayItems = 0
 
-    Do While startArrayItems < arrayItems
+    Do While startArrayItems <= arrayItems
 
         line_start = 2
         Do While line_start <= line_end
@@ -29,7 +46,8 @@ Sub analyse()
             If CStr(Range("B" + CStr(line_start)).Value) = CStr(asstesWithTask(startArrayItems)) Then
                 Range("E" + CStr(line_start)) = "True"
             End If
-        line_start = line_start + 1
+            line_start = line_start + 1
+        
         Loop
         startArrayItems = startArrayItems + 1
     Loop
